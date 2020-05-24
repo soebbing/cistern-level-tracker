@@ -1,0 +1,37 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/src')
+    ->in(__DIR__ . '/tests')
+    ->exclude(__DIR__ . '/tests/support/_generated');
+;
+
+$header = <<<EOF
+EOF;
+
+return PhpCsFixer\Config::create()
+    ->setUsingCache(false)
+    ->setRules([
+        '@PSR2' => true,
+        '@Symfony' => true,
+        'header_comment' => ['header' => $header, 'separate' => 'bottom', 'commentType' => 'PHPDoc'],
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_class_elements' => true,
+        'ordered_imports' => true,
+        'phpdoc_order' => true,
+        'phpdoc_summary' => false,
+        'phpdoc_trim' => true,
+        'blank_line_after_opening_tag' => false,
+        'fully_qualified_strict_types' => true,
+        'declare_strict_types' => true,
+        'concat_space' => ['spacing' => 'one'],
+        'array_syntax' => ['syntax' => 'short'],
+        'phpdoc_scalar' => [],
+        'simplified_null_return' => true,
+        'short_scalar_cast' => true,
+        'native_function_invocation' => ['include' => ['@all']],
+        'yoda_style' => ['equal' => false, 'identical' => false, 'less_and_greater' => false],
+    ])
+    ->setFinder($finder)
+;

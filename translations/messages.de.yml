@@ -1,0 +1,10 @@
+meta.title: Zisternenübersicht
+
+body.title: Übersicht des Zisternenfüllstands
+
+body.no-data: Keine Daten gefunden
+
+graph.day: Tag
+graph.fill: Füllstand (Liter)
+graph.label: Liter
+graph.title: Füllstand der Zisterne

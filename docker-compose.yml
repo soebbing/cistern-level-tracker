@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+    app:
+        image: registry.gitlab.com/handcoding/cistern-tracker:latest
+        build: .
+        container_name: cistern-tracker-app
+        restart: always
+        working_dir: /app
+        volumes:
+            - .:/app
+        ports:
+            - 80:8000
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.docker.network=web'
+            - "traefik.http.routers.cistern_tracker.entrypoints=http"
+            - "traefik.http.routers.cistern_tracker.tls=true"
+            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+            - 'traefik.http.routers.cistern_tracker.rule=Host(`cistern-tracker.example`, `cistern-tracker.handcoding.de`)'
+            - "traefik.http.routers.cistern_tracker.service=cistern_tracker_service@docker"
+            - "traefik.http.services.cistern_tracker_service.loadbalancer.server.port=8000"
+        networks:
+            web:
+
+    db:
+        image: keinos/sqlite3
+        container_name: cistern-tracker-db
+        stdin_open: true
+        volumes:
+            - ./var/db:/db
+        networks:
+            internal:
+
+networks:
+    internal:
+    web:
+        external: true

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Export environment variables
+export $(grep -v '^#' .env | xargs)
+
+# Deaktivierung der Symfony Deprecation Warnung
+export SYMFONY_DEPRECATIONS_HELPER=weak
+
+echo "Validating composer config..." && composer validate --strict &&
+echo "Checking for insecure libs..." && vendor/bin/security-checker security:check &&
+echo "Linting Twig templates..." && bin/console --env=dev lint:twig src templates &&
+echo "Linting Yaml files..." && bin/console --env=dev lint:yaml src &&
+echo "Linting PHP files..." && vendor/bin/parallel-lint src &&
+echo "Checking for var_dump()s..." && vendor/bin/var-dump-check --symfony --doctrine src &&
+echo "Checking Codestyle..." && vendor/bin/php-cs-fixer fix --allow-risky yes --dry-run &&
+echo "Sniffing code..." && vendor/bin/phpcbf src --extensions=module/php &&
+echo "Static code analysis..." && vendor/bin/phpstan analyse src -l 7 &&
+echo "Running codeception unit tests" && vendor/bin/codecept run unit --coverage --coverage-html &&
+echo "Running codeception tests..." && vendor/bin/codecept --env=dev run
+
+# composer require --dev sensiolabs/security-checker
+# composer require --dev friendsofphp/php-cs-fixer
+# composer require --dev jakub-onderka/php-parallel-lint
+# composer require --dev jakub-onderka/php-var-dump-check
+# composer require --dev phpstan/phpstan
+# composer require --dev squizlabs/php_codesniffer
+# composer require --dev phpunit/phpunit ^7
+# composer require --dev codeception/codeception"
