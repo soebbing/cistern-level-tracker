@@ -21,14 +21,14 @@ class GraphController
         $this->twig = $twig;
         $this->cisternRepository = $cisternRepository;
     }
-    
+
     public function __invoke()
     {
         return new Response(
             $this->twig->render(
                 'base.html.twig',
                 [
-                    'levels' => $this->cisternRepository->getChartData()
+                    'levels' => $this->cisternRepository->getChartData(),
                 ]
             ),
         );

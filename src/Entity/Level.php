@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -31,7 +31,7 @@ class Level implements \JsonSerializable
         $this->liter = $liter;
         $this->datetime = $datetime;
     }
-    
+
     public function getId(): int
     {
         return $this->id;
@@ -49,9 +49,6 @@ class Level implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getDatetime(): \DateTimeInterface
     {
         return $this->datetime;
@@ -68,7 +65,7 @@ class Level implements \JsonSerializable
     {
         return [
             'liter' => $this->liter,
-            'datetime' => $this->datetime
+            'datetime' => $this->datetime,
         ];
     }
 }

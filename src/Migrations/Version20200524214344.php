@@ -9,12 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20200524214344 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Create `level` schema';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $cisternSchema = $schema->createTable('level');
         $cisternSchema
@@ -30,7 +30,7 @@ final class Version20200524214344 extends AbstractMigration
             ->setDefault('CURRENT_TIMESTAMP');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // Not implemented
     }

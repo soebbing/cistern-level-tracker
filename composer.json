@@ -57,7 +57,8 @@
         "test-coverage": "vendor/bin/codecept run --coverage --coverage-html",
         "test-unit": "vendor/bin/codecept run unit",
         "test-e2e": "vendor/bin/codecept run acceptanceGerman,acceptanceEnglish",
-        "cs-fix": "vendor/bin/php-cs-fixer fix --allow-risky yes",
+        "cs-fix": "vendor/bin/php-cs-fixer fix src --allow-risky yes",
+        "cs": "vendor/bin/php-cs-fixer fix src --dry-run --allow-risky=yes",
         "phpstan": "vendor/bin/phpstan analyse src -l 6",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
