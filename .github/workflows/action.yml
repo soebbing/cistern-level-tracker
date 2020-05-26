@@ -1,0 +1,16 @@
+name: Check Code
+
+on:
+  push:
+
+description: Check code
+runs:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        path:
+          - app

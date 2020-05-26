@@ -11,7 +11,7 @@ final class Version20200524214344 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Create `cistern` schema';
+        return 'Create `level` schema';
     }
 
     public function up(Schema $schema) : void
@@ -32,6 +32,6 @@ final class Version20200524214344 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
-
+        // Not implemented
     }
 }

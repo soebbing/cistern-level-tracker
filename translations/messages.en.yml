@@ -1,5 +1,10 @@
-meta.title: Zisternenübersicht
+meta.title: Cistern overview
 
-body.title: Übersicht des Zisternenfüllstands
+body.title: Overview on cistern level
 
-body.no-data: Keine Daten gefunden
+body.no-data: No data found
+
+graph.day: Day
+graph.fill: Level (Liter)
+graph.label: Liter
+graph.title: Level in cistern
