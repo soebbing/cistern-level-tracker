@@ -14,11 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Check Codestyle
-      run: composer run-script cs
+    - name: Run testss
+      run: .github/ci
