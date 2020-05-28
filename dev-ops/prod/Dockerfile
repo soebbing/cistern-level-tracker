@@ -17,7 +17,7 @@ RUN apk --update add ca-certificates \
         php7-iconv php7-intl php7-json php7-mbstring \
         php7-mysqli php7-openssl php7-pdo_mysql \
         php7-session php7-xml php7-xmlreader \
-        php7-zip php7-zlib php7-phar \
+        php7-zip php7-zlib php7-phar php7-pecl-pcov \
         gnu-libiconv \
         composer \
     && ln -sf /usr/bin/php7 /usr/bin/php \

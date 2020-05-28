@@ -1,8 +1,7 @@
-name: PHP Composer
+name: PHP analysis & tests
 
 on:
   push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -17,5 +16,9 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run testss
-      run: .github/ci
+    - name: Run code analysis
+      run: .github/code-analysis
+
+    - name: Run tests
+      run: .github/tests
+

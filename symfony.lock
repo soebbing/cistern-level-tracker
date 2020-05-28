@@ -44,6 +44,9 @@
     "codeception/module-phpbrowser": {
         "version": "1.0.0"
     },
+    "codeception/module-symfony": {
+        "version": "1.1.0"
+    },
     "codeception/phpunit-wrapper": {
         "version": "9.0.2"
     },
@@ -461,6 +464,9 @@
     "symfony/http-kernel": {
         "version": "v5.0.8"
     },
+    "symfony/inflector": {
+        "version": "v5.0.8"
+    },
     "symfony/intl": {
         "version": "v5.0.8"
     },
@@ -541,6 +547,12 @@
     "symfony/profiler-pack": {
         "version": "v1.0.4"
     },
+    "symfony/property-access": {
+        "version": "v5.0.8"
+    },
+    "symfony/property-info": {
+        "version": "v5.0.8"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -554,6 +566,12 @@
             "config/packages/routing.yaml",
             "config/routes.yaml"
         ]
+    },
+    "symfony/serializer": {
+        "version": "v5.0.8"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.3"
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"

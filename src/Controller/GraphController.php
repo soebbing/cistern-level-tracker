@@ -22,7 +22,7 @@ class GraphController
         $this->cisternRepository = $cisternRepository;
     }
 
-    public function __invoke()
+    public function __invoke(): Response
     {
         return new Response(
             $this->twig->render(

@@ -7,14 +7,25 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
 
-class LevelRepository extends ServiceEntityRepository
+class LevelRepository extends ServiceEntityRepository implements LevelRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Level::class);
     }
 
-    public function getChartData(\DateTimeInterface $since = null)
+    /**
+     * @inherited
+     */
+    public function getExportData(): array
+    {
+        return $this->getChartData(new \DateTimeImmutable('01-01-1970', new \DateTimeZone('UTC')));
+    }
+
+    /**
+     * @inherited
+     */
+    public function getChartData(\DateTimeInterface $since = null): array
     {
         if (!$since) {
             $since = new \DateTime();
@@ -32,7 +43,7 @@ class LevelRepository extends ServiceEntityRepository
             ->getResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
-    public function addEntry(float $liter, \DateTimeInterface $dateTime)
+    public function addEntry(float $liter, \DateTimeInterface $dateTime): void
     {
         $this->getEntityManager()->persist(new Level($liter, $dateTime));
         $this->getEntityManager()->flush();

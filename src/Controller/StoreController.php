@@ -21,7 +21,7 @@ class StoreController
         $this->cisternRepository = $cisternRepository;
     }
 
-    public function __invoke(float $liter, DateTime $date = null)
+    public function __invoke(float $liter, DateTime $date = null): JsonResponse
     {
         if (!$date) {
             $date = new DateTime();

@@ -1,0 +1,8 @@
+{% block title %}
+id,liter,datetime
+{% endblock %}
+{% block body %}
+{% for level in levels %}
+{{ level.id }},{{ level.liter }},{{ level.datetime|date('d-m-Y H:i:s') }}
+{% endfor %}
+{% endblock %}

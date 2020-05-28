@@ -61,7 +61,10 @@ class Level implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
     {
         return [
             'liter' => $this->liter,
