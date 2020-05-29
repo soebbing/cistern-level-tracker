@@ -1,0 +1,13 @@
+name: PHP Tests
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    needs: static_analysis
+
+    uses: actions/checkout@v2
+
+    steps:
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict

@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+require_once __DIR__.'/bootstrap.php.cache';
+require_once __DIR__.'/AppKernel.php';
 
-use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\ArrayInput;
 
-require \dirname(__DIR__) . '/vendor/autoload.php';
+$kernel = new AppKernel('test', true); // create a "test" kernel
+$kernel->boot();
 
-if (\file_exists(\dirname(__DIR__) . '/config/bootstrap.php')) {
-    require \dirname(__DIR__) . '/config/bootstrap.php';
-} elseif (\method_exists(Dotenv::class, 'bootEnv')) {
-    (new Dotenv())->bootEnv(\dirname(__DIR__) . '/.env');
-}
+$application = new Application($kernel);

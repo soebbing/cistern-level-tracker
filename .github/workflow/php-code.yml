@@ -2,8 +2,6 @@ name: PHP analysis & tests
 
 on:
   push:
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -11,14 +9,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
-    - name: Run code analysis
-      run: .github/code-analysis
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Run tests
-      run: .github/tests
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
 
+      - name: Check for known vulnerabilities
+        run: vendor/bin/security-checker security:check
+
+      - name: Lint Yaml files
+        run: bin/console --env=dev lint:yaml src
+
+      - name: Lint Twig templates
+        run: bin/console --env=dev lint:twig src templates
+
+      - name: Lint PHP files
+        run: vendor/bin/parallel-lint src
+
+      - name: Check Codestyle
+        run: vendor/bin/php-cs-fixer fix --allow-risky yes --dry-run
+
+      - name: Run code analysis
+        run: .github/code-analysis
