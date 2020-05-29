@@ -54,7 +54,7 @@ class Level implements \JsonSerializable
         return $this->datetime;
     }
 
-    public function setDatetime(\DateTimeInterface $datetime): self
+    public function setDatetime(\DateTimeInterface $datetime, \DateTimeZone $param): self
     {
         $this->datetime = $datetime;
 
