@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     app:
-        image: registry.gitlab.com/handcoding/cistern-tracker:latest
+        image: docker.pkg.github.com/soebbing/cistern-level-tracker/image:latest
         container_name: cistern-tracker-app
         restart: always
         working_dir: /app

@@ -9,12 +9,12 @@ interface LevelRepositoryInterface
     /**
      * @return Level[]
      */
-    public function getExportData(): array;
+    public function getAllResults(): array;
 
     /**
      * @return Level[]
      */
-    public function getChartData(\DateTimeInterface $since = null): array;
+    public function getDataSince(\DateTimeInterface $since = null): array;
 
-    public function addEntry(float $liter, \DateTimeInterface $dateTime): void;
+    public function addEntry(float $liter, \DateTimeInterface $dateTime): Level;
 }

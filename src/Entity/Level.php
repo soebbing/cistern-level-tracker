@@ -42,23 +42,9 @@ class Level implements \JsonSerializable
         return $this->liter;
     }
 
-    public function setLiter(float $liter): self
-    {
-        $this->liter = $liter;
-
-        return $this;
-    }
-
-    public function getDatetime(): \DateTimeInterface
+    public function getDateTime(): \DateTimeInterface
     {
         return $this->datetime;
-    }
-
-    public function setDatetime(\DateTimeInterface $datetime, \DateTimeZone $param): self
-    {
-        $this->datetime = $datetime;
-
-        return $this;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\LevelRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,18 +24,20 @@ class ExportController
         $this->cisternRepository = $cisternRepository;
     }
 
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
         $response = new Response(
             $this->twig->render('base.csv.twig',
             [
-                'levels' => $this->cisternRepository->getExportData(),
+                'delimiter' => $request->query->get('delimiter', "\t"),
+                'levels' => $this->cisternRepository->getAllResults(),
             ]
         ));
 
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'cistern-level-data.csv');
+            'cistern-level-data.csv'
+        );
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', $disposition);
 

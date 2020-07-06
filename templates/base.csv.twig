@@ -1,8 +1,8 @@
 {% block title %}
-id,liter,datetime
+id{{ delimiter }}liter{{ delimiter }}datetime
 {% endblock %}
 {% block body %}
 {% for level in levels %}
-{{ level.id }},{{ level.liter }},{{ level.datetime|date('d-m-Y H:i:s') }}
+{{ level.id }}{{ delimiter }}{{ level.liter }}{{ delimiter }}{{ level.datetime|date('d-m-Y H:i:s') }}
 {% endfor %}
 {% endblock %}

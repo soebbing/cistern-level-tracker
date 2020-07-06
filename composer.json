@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
+        "ext-json": "*",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/console": "5.0.*",
         "symfony/dotenv": "5.0.*",
@@ -20,10 +21,12 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^6.3",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "jakub-onderka/php-parallel-lint": "@stable",
-        "jakub-onderka/php-var-dump-check": "@stable",
+        "liip/test-fixtures-bundle": "^1.9",
+        "php-parallel-lint/php-parallel-lint": "@stable",
+        "php-parallel-lint/php-var-dump-check": "@stable",
         "phpmd/phpmd": "^2.8",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9.1",
@@ -34,6 +37,7 @@
         "symfony/debug-bundle": "^5.0",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^5.1",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "^1.0"
     },
@@ -57,12 +61,11 @@
         }
     },
     "scripts": {
-        "test-coverage": "vendor/bin/codecept run --coverage --coverage-html",
-        "test-unit": "vendor/bin/codecept run unit",
-        "test-e2e": "vendor/bin/codecept run acceptanceGerman,acceptanceEnglish",
+        "test-coverage": "vendor/bin/phpunit --coverage-text --coverage-html var/coverage",
+        "test": "vendor/bin/phpunit",
         "cs-fix": "vendor/bin/php-cs-fixer fix --allow-risky yes",
         "cs": "vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes",
-        "phpstan": "vendor/bin/phpstan analyse src -l 6",
+        "phpstan": "vendor/bin/phpstan analyse src -l 7",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",

@@ -21,4 +21,4 @@ To add data, request the following URL: `/add/<liter float value>`, e.g. `/add/7
 
 The value `789.5` with the unit `Liter` will be stored for the current timestamp automatically.
 
-To provide a custom timestamp, add a second parameter with datetime value `/add/789.5/2020-05-04+17:18:19`.
+To provide a custom timestamp, add a second parameter with datetime value `/add/789.5/2020-02-20%2020:02:20`.

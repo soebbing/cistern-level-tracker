@@ -2,76 +2,14 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{{ 'cistern-level.title'|trans }}{% endblock %}</title>
+        <title>{% block title %}{{ 'meta.title'|trans }}{% endblock %}</title>
         {% block stylesheets %}
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
         {% endblock %}
     </head>
     <body>
-        {% block body %}
-            {% if levels|length == 0 %}
-                <h2>{{ 'body.no-data'|trans }}</h2>
-            {% else %}
-
-            <div style="width:75%;">
-                <canvas id="canvas"></canvas>
-            </div>
-
-            <script>
-            var config = {
-                type: 'line',
-                data: {
-                    labels: {{ levels|map(p => "#{p.datetime}"|date('d.m'))|json_encode|raw }},
-                    datasets: [{
-                        label: '{{ 'graph.label'|trans }}',
-                        backgroundColor: '#00FFFF',
-                        borderColor: '#0808D0',
-                        data: {{ levels|map(p => "#{p.liter}")|json_encode|raw }},
-                        fill: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: '{{ 'graph.title'|trans }}'
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    hover: {
-                        mode: 'nearest',
-                        intersect: true
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: '{{ 'graph.day'|trans }}'
-                            }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: '{{ 'graph.fill'|trans }}'
-                            }
-                        }]
-                    }
-                }
-            };
-            </script>
-
-            {% endif %}
-        {% endblock %}
+        {% block body %}{% endblock %}
 
         {% block javascripts %}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
