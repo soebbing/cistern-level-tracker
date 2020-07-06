@@ -26,9 +26,9 @@ class GraphController
     {
         return new Response(
             $this->twig->render(
-                'base.html.twig',
+                'graph.html.twig',
                 [
-                    'levels' => $this->cisternRepository->getChartData(),
+                    'levels' => $this->cisternRepository->getDataSince(),
                 ]
             ),
         );

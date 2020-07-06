@@ -1,0 +1,89 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Cisterntracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if levels|length > 0 %}
+                    <li class="nav-item float-right">
+                        <a class="nav-link" href="{{ url('export') }}">CSV Export</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    {% if levels|length == 0 %}
+        <div class="row">
+            <div class="col">
+                <h2>{{ 'body.no-data'|trans }}</h2>
+            </div>
+        </div>
+    {% else %}
+
+        <div style="width:75%;">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <script>
+            var config = {
+                type: 'line',
+                data: {
+                    labels: {{ levels|map(p => "#{p.datetime}"|date('d.m'))|json_encode|raw }},
+                    datasets: [{
+                        label: '{{ 'graph.label'|trans }}',
+                        backgroundColor: '#00FFFF',
+                        borderColor: '#0808D0',
+                        data: {{ levels|map(p => "#{p.liter}")|json_encode|raw }},
+                        fill: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '{{ 'graph.title'|trans }}'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: '{{ 'graph.day'|trans }}'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: '{{ 'graph.fill'|trans }}'
+                            }
+                        }]
+                    }
+                }
+            };
+        </script>
+
+    {% endif %}
+</div>
+{% endblock %}

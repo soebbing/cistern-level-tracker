@@ -46,7 +46,7 @@ RUN rm -rf $PROJECT_ROOT/var/cache \
 USER app
 
 RUN composer install --optimize-autoloader --no-scripts --no-interaction \
-    && bin/console doctrine:migration:migrate --quiet --no-interaction
+    && bin/console doctrine:migration:migrate --allow-no-migration --no-interaction
 
 # Expose the port nginx is reachable on
 EXPOSE 8000

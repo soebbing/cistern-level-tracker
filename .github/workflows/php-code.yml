@@ -4,8 +4,7 @@ on:
   push:
 
 env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: image
+  IMAGE_NAME: app
 
 jobs:
   build:
@@ -69,6 +68,12 @@ jobs:
 
       - name: Run unit tests
         run: .github/unit-tests
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Coverage Report
+          path: var/coverage/
 
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/

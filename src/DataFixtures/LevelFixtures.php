@@ -21,10 +21,9 @@ class LevelFixtures extends Fixture
 
         // Create two others in the last 30 days
         $date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        //$first = clone $date;
-        //$second = clone $date;
         $first = $date->sub(new \DateInterval('P20D'));
         $second = $date->sub(new \DateInterval('P10D'));
+
         $manager->persist(
             new Level(5, $first)
         );

@@ -6,7 +6,6 @@ export APP_ENV=test
 
 bin/console doctrine:schema:drop --force &&
 bin/console doctrine:schema:create &&
-bin/console doctrine:migrations:migrate --no-interaction &&
-bin/console doctrine:fixtures:load  --purge-with-truncate --no-interaction
+bin/console doctrine:fixtures:load --purge-with-truncate --no-interaction
 
-vendor/bin/phpunit
+composer test-coverage

@@ -17,19 +17,19 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
     /**
      * @inherited
      */
-    public function getExportData(): array
+    public function getAllResults(): array
     {
-        return $this->getChartData(new \DateTimeImmutable('01-01-1970', new \DateTimeZone('UTC')));
+        return $this->getDataSince(new \DateTimeImmutable('01-01-1970', new \DateTimeZone('UTC')));
     }
 
     /**
      * @inherited
      */
-    public function getChartData(\DateTimeInterface $since = null): array
+    public function getDataSince(\DateTimeInterface $since = null): array
     {
         if (!$since) {
-            $since = new \DateTime();
-            $since->sub(new \DateInterval('P30D'));
+            $since = (new \DateTime('now', new \DateTimeZone('UTC')))
+                ->sub(new \DateInterval('P30D'));
         }
 
         $query = $this->createQueryBuilder('l')
@@ -43,9 +43,16 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
             ->getResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
-    public function addEntry(float $liter, \DateTimeInterface $dateTime): void
+    public function addEntry(float $liter, \DateTimeInterface $dateTime): Level
     {
-        $this->getEntityManager()->persist(new Level($liter, $dateTime));
+        if ($liter < 0) {
+            throw new \InvalidArgumentException('$liter cannot be negative');
+        }
+
+        $level = new Level($liter, $dateTime);
+        $this->getEntityManager()->persist($level);
         $this->getEntityManager()->flush();
+
+        return $level;
     }
 }

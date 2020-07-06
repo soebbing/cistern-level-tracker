@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/add/{liter}/{date}", name="add", methods={"GET"})
- * @ParamConverter("date", options={"format": "Y-m-d h:i:s"})
+ * @ParamConverter("date", options={"format": "Y-m-d H:i:s"})
  */
 class StoreController
 {
@@ -27,11 +27,8 @@ class StoreController
             $date = new DateTime();
         }
 
-        $this->cisternRepository->addEntry($liter, $date);
+        $level = $this->cisternRepository->addEntry($liter, $date);
 
-        return new JsonResponse([
-            'liter' => $liter,
-            'date' => $date,
-        ]);
+        return new JsonResponse($level->jsonSerialize());
     }
 }
