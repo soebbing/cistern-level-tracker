@@ -8,11 +8,12 @@ storing fill level data and display a little graph of it.
 The container listens on port 8000 for HTTP requests.
 
 To restrict access, create a `.htpasswd` file in the `/app/var` directory. It will
-be picked up by the NGINX automatically.
+be picked up by the Nginx automatically.
 
 You can run the app using docker by executing
 ```bash
-$ docker run gitlab.com -v var:/app/var -p 80:80000
+$ docker run docker.pkg.github.com/soebbing/cistern-level-tracker/image:latest \
+     -v ./var:/app/var -p 80:80000
 ```
 
 ## Adding Data

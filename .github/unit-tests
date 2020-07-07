@@ -3,6 +3,8 @@
 set -x
 
 export APP_ENV=test
+export APP_SECRET='zhn1r97qrwwp64z64w3ql8mbkrhlilld'
+export DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db?charset=UTF8
 
 bin/console doctrine:schema:drop --force &&
 bin/console doctrine:schema:create &&

@@ -22,7 +22,7 @@ RUN apk --update add ca-certificates \
         composer \
     && ln -sf /usr/bin/php7 /usr/bin/php \
     && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log /var/cache/composer \
-    && rm /etc/nginx/conf.d/default.conf \
+    && rm -f .env* /etc/nginx/conf.d/default.conf \
     && adduser -u 1000 -D -h $PROJECT_ROOT app app
 
 # Copy system configs
