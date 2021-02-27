@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -27,7 +28,7 @@ class ExportController
     public function __invoke(Request $request): Response
     {
         $response = new Response(
-            $this->twig->render('base.csv.twig',
+            $this->twig->render('export/template.csv.twig',
             [
                 'delimiter' => $request->query->get('delimiter', "\t"),
                 'levels' => $this->cisternRepository->getAllResults(),

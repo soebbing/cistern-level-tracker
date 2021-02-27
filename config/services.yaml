@@ -26,11 +26,5 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Symfony\Component\Serializer\Serializer:
-        class: Symfony\Component\Serializer\Serializer
-        arguments:
-            - ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
-            - ['@Symfony\Component\Serializer\Encoder\CsvEncoder']
-
-    Symfony\Component\Serializer\Encoder\CsvEncoder:
-        class: Symfony\Component\Serializer\Encoder\CsvEncoder
+    App\Repository\LevelRepository:
+        tags: ['doctrine.repository_service']

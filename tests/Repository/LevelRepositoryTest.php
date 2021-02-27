@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Tests\Repository;
 
@@ -34,31 +35,29 @@ class LevelRepositoryTest extends WebTestCase
         $repository->addEntry(4, $date);
         $results = $repository->getDataSince($date);
 
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
 
         /** @var Level $result */
         $result = \array_shift($results);
-        $this->assertInstanceOf(Level::class, $result);
-        $this->assertEquals(4, $result->getLiter());
-        $this->assertEquals($date->getTimestamp(), $result->getDatetime()->getTimestamp());
+        self::assertInstanceOf(Level::class, $result);
+        self::assertEquals(4, $result->getLiter());
+        self::assertEquals($date->getTimestamp(), $result->getDatetime()->getTimestamp());
     }
 
     public function testDataSinceWithoutParameterFilters()
     {
-        $repository = static::$container->get(LevelRepository::class);
-
         // Without defining a date, we get the results of last month
-        $results = $repository->getDataSince();
-        $this->assertCount(2, $results);
+        $results = static::$container->get(LevelRepository::class)->getDataSince();
+        self::assertCount(2, $results);
     }
 
     public function testDataSinceWithDateParameterWorks()
     {
         $repository = static::$container->get(LevelRepository::class);
 
-        $lastMonth = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P10Y'));
+        $lastMonth = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P20Y'));
         $results = $repository->getDataSince($lastMonth);
-        $this->assertCount(4, $results);
+        self::assertCount(4, $results);
     }
 
     public function testNegativeLitersThrowException()
@@ -72,27 +71,25 @@ class LevelRepositoryTest extends WebTestCase
 
     public function testGetExportResultWorks()
     {
-        $repository = static::$container->get(LevelRepository::class);
-        $export = $repository->getAllResults();
+        $export = static::$container->get(LevelRepository::class)->getAllResults();
 
-        $this->assertContainsOnlyInstancesOf(Level::class, $export);
+        self::assertContainsOnlyInstancesOf(Level::class, $export);
     }
 
     public function testEntity()
     {
-        $repository = static::$container->get(LevelRepository::class);
-        $export = $repository->getAllResults();
+        $export = static::$container->get(LevelRepository::class)->getAllResults();
 
         /** @var Level $entity */
         $entity = \array_shift($export);
-        $this->assertIsInt($entity->getId());
-        $this->assertIsFloat($entity->getLiter());
-        $this->assertInstanceOf(\DateTime::class, $entity->getDateTime());
+        self::assertIsInt($entity->getId());
+        self::assertIsFloat($entity->getLiter());
+        self::assertInstanceOf(\DateTime::class, $entity->getDateTime());
 
         $json = $entity->jsonSerialize();
-        $this->assertIsArray($json);
-        $this->assertArrayNotHasKey('id', $json);
-        $this->assertArrayHasKey('liter', $json);
-        $this->assertArrayHasKey('datetime', $json);
+        self::assertIsArray($json);
+        self::assertArrayNotHasKey('id', $json);
+        self::assertArrayHasKey('liter', $json);
+        self::assertArrayHasKey('datetime', $json);
     }
 }

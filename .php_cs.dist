@@ -2,8 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
-    ->in(__DIR__ . '/tests')
-    ->exclude('_support/_generated/');
+    ->in(__DIR__ . '/tests');
 ;
 
 $header = <<<EOF

@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Repository\LevelRepository;
-use DateTime;
+use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,10 +22,10 @@ class StoreController
         $this->cisternRepository = $cisternRepository;
     }
 
-    public function __invoke(float $liter, DateTime $date = null): JsonResponse
+    public function __invoke(float $liter, DateTimeImmutable $date = null): JsonResponse
     {
         if (!$date) {
-            $date = new DateTime();
+            $date = new DateTimeImmutable('now');
         }
 
         $level = $this->cisternRepository->addEntry($liter, $date);
