@@ -63,6 +63,8 @@ RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --pref
 
 FROM build-fpm-composer AS final
 
+COPY ./bin $PROJECT_ROOT/bin
+
 # Make sure files/folders needed by the processes are accessible when they run under the app
 RUN chown -R app.app /run \
     && chown -R app.app /var/lib/nginx \
