@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="LevelRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\LevelRepository")
  */
 class Level implements \JsonSerializable
 {
@@ -56,5 +57,15 @@ class Level implements \JsonSerializable
             'liter' => $this->liter,
             'datetime' => $this->datetime,
         ];
+    }
+
+    public function setLiter(float $liter): void
+    {
+        $this->liter = $liter;
+    }
+
+    public function setDatetime(\DateTimeInterface $datetime): void
+    {
+        $this->datetime = $datetime;
     }
 }

@@ -10,17 +10,31 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="{{ url('home') }}">Cisterntracker</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        {% if levels|length > 0 %}
+                            <li class="nav-item float-right">
+                                <a class="nav-link" href="{{ url('level.list') }}">Übersicht</a>
+                            </li>
+                            <li class="nav-item float-right">
+                                <a class="nav-link" href="{{ url('export') }}">CSV Export</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+
+            {% block body %}{% endblock %}
+        </div>
 
         {% block javascripts %}
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
-
-            <script>
-                window.onload = function() {
-                    var ctx = document.getElementById('canvas').getContext('2d');
-                    window.myLine = new Chart(ctx, config);
-                };
-            </script>
         {% endblock %}
     </body>
 </html>

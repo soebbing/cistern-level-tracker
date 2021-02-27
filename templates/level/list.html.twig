@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% if levels|length == 0 %}
+        <div class="row">
+            <div class="col">
+                <h2>{{ 'body.no-data'|trans }}</h2>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col">
+                <h2>{{ 'body.levels'|trans }}</h2>
+            </div>
+        </div>
+
+        {% if app.request.query.get('deleted') == 1 %}
+            <div class="alert alert-success">
+                Eintrag gelöscht!
+            </div>
+        {% endif %}
+
+        {% for level in levels %}
+        <div class="row mb-1">
+            <div class="col col-xl-11">
+
+                <form action="{{ url("level.update", {'id': level.id}) }}" method="post">
+                    <div class="form-row">
+                        <input type="hidden" name="id" value="{{ level.id }}">
+
+                        <div class="col col-xl-3">
+                            <div class="input-group">
+                                <input type="number"
+                                       placeholder="Liter"
+                                       class="form-control"
+                                       name="liter"
+                                       step="0.01"
+                                       value="{{ level.liter }}"
+                                       required>
+
+                                <div class="input-group-append">
+                                    <div class="input-group-text">Liter</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col col-xl-7">
+                            <div class="input-group">
+                                <input type="datetime-local"
+                                       placeholder="Zeitpunkt"
+                                       class="form-control"
+                                       name="dateTime"
+                                       value="{{ level.dateTime|date("Y-m-d H:i")|replace({" ": "T"}) }}"
+                                       required>
+
+                                <div class="input-group-append">
+                                    <div class="input-group-text">Zeitpunkt</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col col-xl-2">
+                            <button type="submit"
+                                    class="btn btn-primary">Speichern</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col col-xl-1">
+                <div class="form-row">
+                    <div class="col">
+                        <form action="{{ url("level.delete") }}" method="post">
+                            <div class="form-row">
+                                <div class="col">
+                                    <input type="hidden"
+                                           name="id"
+                                           value="{{ level.id }}">
+                                    <button type="submit"
+                                            class="btn btn-danger">Löschen</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    {% endif %}
+{% endblock %}

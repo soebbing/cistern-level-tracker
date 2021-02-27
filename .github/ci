@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 
-# Export environment variables
-export $(grep -v '^#' .env | xargs)
+if [ "$ENV" ]
+then
+  echo "Evaluate .env file..."
+  # Export environment variables for environment
+  export $(grep -v '^#' .env.$ENV | xargs)
+else
+  echo "Missing ENV!"
+fi
 
 # Deaktivierung der Symfony Deprecation Warnung
 export SYMFONY_DEPRECATIONS_HELPER=weak
 
 echo "Validating composer config..." && composer validate --strict &&
-echo "Checking for insecure libs..." && vendor/bin/security-checker security:check &&
 echo "Linting Twig templates..." && bin/console --env=dev lint:twig src templates &&
 echo "Linting Yaml files..." && bin/console --env=dev lint:yaml src &&
-echo "Linting PHP files..." && vendor/bin/parallel-lint src &&
+  echo "Linting PHP files..." && vendor/bin/parallel-lint src &&
 echo "Checking for var_dump()s..." && vendor/bin/var-dump-check --symfony --doctrine src &&
 echo "Checking Codestyle..." && vendor/bin/php-cs-fixer fix --allow-risky yes --dry-run &&
 echo "Sniffing code..." && vendor/bin/phpcbf src --extensions=module/php &&

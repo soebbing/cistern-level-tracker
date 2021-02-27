@@ -1,13 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Level;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\Persistence\ManagerRegistry;
 
-class LevelRepository extends ServiceEntityRepository implements LevelRepositoryInterface
+class LevelRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -15,7 +16,7 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
     }
 
     /**
-     * @inherited
+     * @return Level[]
      */
     public function getAllResults(): array
     {
@@ -23,7 +24,7 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
     }
 
     /**
-     * @inherited
+     * @return Level[]
      */
     public function getDataSince(\DateTimeInterface $since = null): array
     {
@@ -43,6 +44,14 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
             ->getResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
+    public function removeEntry(int $id): void
+    {
+        $this->createQueryBuilder('l')
+            ->delete('App:Level', 'l')
+            ->where('l.id = :levelId')
+            ->setParameter('levelId', $id);
+    }
+
     public function addEntry(float $liter, \DateTimeInterface $dateTime): Level
     {
         if ($liter < 0) {
@@ -50,8 +59,9 @@ class LevelRepository extends ServiceEntityRepository implements LevelRepository
         }
 
         $level = new Level($liter, $dateTime);
-        $this->getEntityManager()->persist($level);
-        $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+        $em->persist($level);
+        $em->flush();
 
         return $level;
     }

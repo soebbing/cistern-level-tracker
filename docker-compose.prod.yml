@@ -2,24 +2,24 @@ version: "3.3"
 
 services:
     app:
-        image: docker.pkg.github.com/soebbing/cistern-level-tracker/image:latest
+        image: ghcr.io/soebbing/cistern-level-tracker/app:latest
         container_name: cistern-tracker-app
         restart: always
         working_dir: /app
         volumes:
-            - var:/app/var
-        ports:
-            - 80:8000
+            - ./var:/app/var
+        environment:
+            VIRTUAL_HOST: cistern-tracker.handcoding.de
+            APP_ENV: prod
+            APP_SECRET: f7aaa4676049342a25ce17aa8df9af97
+            DATABASE_URL: sqlite:////app/var/cistern.sqlite?charset=UTF8
         labels:
             - 'traefik.enable=true'
             - 'traefik.docker.network=web'
-            - "traefik.http.routers.cistern_tracker.entrypoints=http"
-            - "traefik.http.routers.cistern_tracker.tls=true"
-            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+            - 'traefik.http.routers.cistern_tracker.entrypoints=http'
             - 'traefik.http.routers.cistern_tracker.rule=Host(`cistern-tracker.example`, `cistern-tracker.handcoding.de`)'
-            - "traefik.http.routers.cistern_tracker.service=cistern_tracker_service@docker"
-            - "traefik.http.services.cistern_tracker_service.loadbalancer.server.port=8000"
+            - 'traefik.http.routers.cistern_tracker.service=cistern_tracker_service@docker'
+            - 'traefik.http.services.cistern_tracker_service.loadbalancer.server.port=8000'
         networks:
             web:
 

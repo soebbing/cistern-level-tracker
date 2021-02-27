@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -x
+
+# Deaktivierung der Symfony Deprecation Warnung
+export SYMFONY_DEPRECATIONS_HELPER=weak
+
+export APP_ENV=test
+export APP_SECRET='zhn1r97qrwwp64z64w3ql8mbkrhlilld'
+export DATABASE_URL=sqlite:///%kernel.project_dir%/var/cistern-test.sqlite?charset=UTF8
+
+bin/console doctrine:schema:drop --force &&
+bin/console doctrine:schema:create &&
+bin/console doctrine:fixtures:load --purge-with-truncate --no-interaction
+
+vendor/bin/phpunit --bootstrap tests/bootstrap.php  --coverage-text --coverage-html var/coverage
