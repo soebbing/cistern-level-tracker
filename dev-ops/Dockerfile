@@ -64,12 +64,23 @@ RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --pref
 FROM build-fpm-composer AS final
 
 COPY ./bin $PROJECT_ROOT/bin
+COPY ./config $PROJECT_ROOT/config
+COPY ./src $PROJECT_ROOT/src
+COPY ./migrations $PROJECT_ROOT/migrations
+COPY ./templates $PROJECT_ROOT/templates
+COPY ./translations $PROJECT_ROOT/translations
+COPY ./public $PROJECT_ROOT/public
 
 # Make sure files/folders needed by the processes are accessible when they run under the app
 RUN chown -R app.app /run \
     && chown -R app.app /var/lib/nginx \
     && chown -R app.app /var/log/nginx \
-    && chown -R app.app /var/cache/composer
+    && chown -R app.app /var/cache/composer \
+    && mkdir -p $PROJECT_ROOT/var
+
+ADD --chown=app . $PROJECT_ROOT
+
+USER app
 
 # Expose the port nginx is reachable on
 EXPOSE 8000
