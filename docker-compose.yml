@@ -7,7 +7,8 @@ services:
             dockerfile: dev-ops/Dockerfile
         image: cisterntracker_app:latest
         container_name: cistern-tracker-app
-        env_file: .env
         ports:
             - 80:8000
         user: "1000:1000"
+        volumes:
+        -  ./:/app
