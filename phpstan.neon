@@ -1,8 +1,9 @@
 parameters:
     excludes_analyse:
         - %currentWorkingDirectory%/src/Migrations/*
+    checkGenericClassInNonGenericObjectType: false
 
-    level: 8
+    level: max
     paths:
         - src
         - tests
