@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Controller;
@@ -11,7 +12,7 @@ class StoreControllerTest extends WebTestCase
 {
     use FixturesTrait;
 
-    public function testDateValueIsStored()
+    public function testDateValueIsStored(): void
     {
         $client = static::createClient();
 
@@ -31,7 +32,7 @@ class StoreControllerTest extends WebTestCase
         );
     }
 
-    public function testGetPositiveValueIsStored()
+    public function testGetPositiveValueIsStored(): void
     {
         $client = static::createClient();
 
@@ -49,7 +50,7 @@ class StoreControllerTest extends WebTestCase
         );
     }
 
-    public function testGetNegativeValueThrowsError()
+    public function testGetNegativeValueThrowsError(): void
     {
         $client = static::createClient();
 
@@ -61,7 +62,7 @@ class StoreControllerTest extends WebTestCase
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostEmptyValueThrowsError()
+    public function testPostEmptyValueThrowsError(): void
     {
         $client = static::createClient();
 
@@ -73,7 +74,7 @@ class StoreControllerTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testGetEmptyValueThrowsError()
+    public function testGetEmptyValueThrowsError(): void
     {
         $client = static::createClient();
 

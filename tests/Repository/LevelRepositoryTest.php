@@ -26,8 +26,9 @@ class LevelRepositoryTest extends WebTestCase
         self::bootKernel();
     }
 
-    public function testValuesAreStored()
+    public function testValuesAreStored(): void
     {
+        /** @var LevelRepository $repository */
         $repository = static::$container->get(LevelRepository::class);
 
         $date = new \DateTimeImmutable('now');
@@ -44,15 +45,20 @@ class LevelRepositoryTest extends WebTestCase
         self::assertEquals($date->getTimestamp(), $result->getDatetime()->getTimestamp());
     }
 
-    public function testDataSinceWithoutParameterFilters()
+    public function testDataSinceWithoutParameterFilters(): void
     {
+        /** @var LevelRepository $repository */
+        $repository = static::$container->get(LevelRepository::class);
+
         // Without defining a date, we get the results of last month
-        $results = static::$container->get(LevelRepository::class)->getDataSince();
+        $results = $repository->getDataSince();
+
         self::assertCount(2, $results);
     }
 
-    public function testDataSinceWithDateParameterWorks()
+    public function testDataSinceWithDateParameterWorks(): void
     {
+        /** @var LevelRepository $repository */
         $repository = static::$container->get(LevelRepository::class);
 
         $lastMonth = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P20Y'));
@@ -60,25 +66,31 @@ class LevelRepositoryTest extends WebTestCase
         self::assertCount(4, $results);
     }
 
-    public function testNegativeLitersThrowException()
+    public function testNegativeLitersThrowException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
+        /** @var LevelRepository $repository */
         $repository = static::$container->get(LevelRepository::class);
 
         $repository->addEntry(-4, new \DateTimeImmutable('now'));
     }
 
-    public function testGetExportResultWorks()
+    public function testGetExportResultWorks(): void
     {
-        $export = static::$container->get(LevelRepository::class)->getAllResults();
+        /** @var LevelRepository $repository */
+        $repository = static::$container->get(LevelRepository::class);
+        $export = $repository->getAllResults();
 
         self::assertContainsOnlyInstancesOf(Level::class, $export);
     }
 
-    public function testEntity()
+    public function testEntity(): void
     {
-        $export = static::$container->get(LevelRepository::class)->getAllResults();
+        /** @var LevelRepository $repository */
+        $repository = static::$container->get(LevelRepository::class);
+
+        $export = $repository->getAllResults();
 
         /** @var Level $entity */
         $entity = \array_shift($export);

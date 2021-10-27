@@ -35,7 +35,7 @@ class ExportControllerTest extends WebTestCase
     /**
      * @dataProvider delimiterProvider
      */
-    public function testCorrectResultNumber(string $delimiter)
+    public function testCorrectResultNumber(string $delimiter): void
     {
         $client = static::createClient();
 
@@ -54,6 +54,9 @@ class ExportControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * @return array<int, array>
+     */
     public function delimiterProvider(): array
     {
         return [
