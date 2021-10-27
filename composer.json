@@ -9,7 +9,7 @@
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
-        "doctrine/doctrine-bundle": "2.1.*",
+        "doctrine/doctrine-bundle": "2.3.*",
         "easycorp/easyadmin-bundle": "3.2.*",
         "sensio/framework-extra-bundle": "5.5.*",
         "symfony/console": "5.2.*",
