@@ -44,7 +44,9 @@ jobs:
         run: vendor/bin/var-dump-check --symfony --doctrine src
 
       - name: Check Codestyle
-        run: vendor/bin/php-cs-fixer fix --allow-risky yes --dry-run
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
 
       - name: Sniffing Code
         run: vendor/bin/phpcbf src --extensions=module/php
@@ -59,6 +61,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt install php-sqlite3
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'

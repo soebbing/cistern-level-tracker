@@ -1,35 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
 use App\DataFixtures\LevelFixtures;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @IgnoreAnnotation("dataProvider")
+ *
+ * @internal
+ * @coversNothing
  */
-class ExportControllerTest extends WebTestCase
+final class ExportControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function testCorrectResponseType(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
         $client->request('GET', '/export');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('UTF-8', $client->getResponse()->getCharset());
-        $this->assertEquals('text/csv; charset=UTF-8', $client->getResponse()->headers->get('content-type'));
-        $this->assertEquals('noindex', $client->getResponse()->headers->get('x-robots-tag'));
-        $this->assertEquals('attachment; filename=cistern-level-data.csv', $client->getResponse()->headers->get('content-disposition'));
+        self::assertSame(200, $client->getResponse()->getStatusCode());
+        self::assertSame('UTF-8', $client->getResponse()->getCharset());
+        self::assertSame('text/csv; charset=UTF-8', $client->getResponse()->headers->get('content-type'));
+        self::assertSame('noindex', $client->getResponse()->headers->get('x-robots-tag'));
+        self::assertSame('attachment; filename=cistern-level-data.csv', $client->getResponse()->headers->get('content-disposition'));
     }
 
     /**
@@ -37,25 +40,26 @@ class ExportControllerTest extends WebTestCase
      */
     public function testCorrectResultNumber(string $delimiter): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
         $client->request('GET', '/export', ['delimiter' => $delimiter]);
 
-        $rows = \str_getcsv(\trim($client->getResponse()->getContent()), "\n");
-        $this->assertCount(5, $rows);
+        $rows = str_getcsv(trim($client->getResponse()->getContent()), "\n");
+        self::assertCount(5, $rows);
 
-        \array_map(
-            fn (string $row) => $this->assertCount(3, \str_getcsv($row, $delimiter)),
+        array_map(
+            static fn (string $row) => self::assertCount(3, str_getcsv($row, $delimiter)),
             $rows
         );
     }
 
     /**
-     * @return array<int, array>
+     * @return array<string[]>
      */
     public function delimiterProvider(): array
     {
