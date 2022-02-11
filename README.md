@@ -5,7 +5,7 @@ storing fill level data and display a little graph of it.
 
 ## Getting started
 
-The container listens on port 8000 for HTTP requests.
+The container listens on port 8000 for HTTP requests, the local `docker-compose.yml` maps this to port 80.
 
 To restrict access, create a `.htpasswd` file in the `/app/var` directory. It will
 be picked up by the Nginx automatically.

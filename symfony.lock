@@ -53,6 +53,9 @@
     "codeception/stub": {
         "version": "3.6.1"
     },
+    "composer/pcre": {
+        "version": "1.0.1"
+    },
     "composer/semver": {
         "version": "1.5.1"
     },
@@ -511,9 +514,6 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
-    },
-    "symfony/http-client-contracts": {
-        "version": "v2.1.2"
     },
     "symfony/http-foundation": {
         "version": "v5.0.10"

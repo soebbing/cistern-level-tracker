@@ -55,7 +55,7 @@ class ExportControllerTest extends WebTestCase
     }
 
     /**
-     * @return array<int, array>
+     * @return array<string[]>
      */
     public function delimiterProvider(): array
     {

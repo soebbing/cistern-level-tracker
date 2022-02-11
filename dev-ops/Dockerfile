@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-glibc:alpine-3.13 AS base
+FROM frolvlad/alpine-glibc:alpine-3.15 AS base
 
 ENV PROJECT_ROOT=/app
 ENV COMPOSER_HOME=/var/cache/composer
@@ -19,7 +19,7 @@ RUN apk --update add ca-certificates \
     \
     && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log \
     && rm /etc/nginx/conf.d/default.conf \
-    && adduser -u 1000 -D -h $PROJECT_ROOT app app
+    ; adduser -u 1000 -D -h $PROJECT_ROOT app app
 
 COPY ./config/etc /etc
 
@@ -27,7 +27,7 @@ FROM base AS build-fpm-composer
 
 WORKDIR $PROJECT_ROOT
 
-COPY --from=composer:2.0.10 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 
 COPY ./composer.json $PROJECT_ROOT/composer.json
 COPY ./composer.lock $PROJECT_ROOT/composer.lock

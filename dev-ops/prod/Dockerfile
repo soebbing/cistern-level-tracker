@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 
 ENV PROJECT_ROOT=/app
 ENV COMPOSER_HOME=/var/cache/composer
@@ -9,7 +9,7 @@ ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
 RUN apk --update add ca-certificates \
-    && echo "https://dl.bintray.com/php-alpine/v3.12/php-8.0" >> /etc/apk/repositories \
+    && echo "https://dl.bintray.com/php-alpine/v3.15/php-8.0" >> /etc/apk/repositories \
     && apk --no-cache add \
         nginx supervisor curl zip git rsync bash openssh-client \
         php8 php8-fpm php8-soap php8-redis \
@@ -24,7 +24,7 @@ RUN apk --update add ca-certificates \
     && rm /etc/nginx/conf.d/default.conf \
     && adduser -u 1000 -D -h $PROJECT_ROOT app app
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 
 # Copy system configs
 COPY config/etc /etc
