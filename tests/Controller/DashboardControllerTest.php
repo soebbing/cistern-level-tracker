@@ -1,19 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DashboardControllerTest extends WebTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class DashboardControllerTest extends WebTestCase
 {
     public function testShowPost(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         $crawler = $client->request('GET', '/admin');
 
-        self::assertEquals(200, $client->getResponse()->getStatusCode());
-        self::assertEquals(1, $crawler->filter('#canvas')->count());
+        self::assertSame(200, $client->getResponse()->getStatusCode());
+        self::assertSame(1, $crawler->filter('#canvas')->count());
     }
 }

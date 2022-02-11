@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repository;
@@ -30,7 +31,8 @@ class LevelRepository extends ServiceEntityRepository
     {
         if (!$since) {
             $since = (new \DateTime('now', new \DateTimeZone('UTC')))
-                ->sub(new \DateInterval('P30D'));
+                ->sub(new \DateInterval('P30D'))
+            ;
         }
 
         $query = $this->createQueryBuilder('l')
@@ -38,10 +40,12 @@ class LevelRepository extends ServiceEntityRepository
             ->orderBy('l.datetime', 'ASC')
             ->setMaxResults(30)
             ->setParameter('since', $since)
-            ->getQuery();
+            ->getQuery()
+        ;
 
         return $query
-            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+            ->getResult(AbstractQuery::HYDRATE_OBJECT)
+        ;
     }
 
     public function removeEntry(int $id): void
@@ -49,7 +53,8 @@ class LevelRepository extends ServiceEntityRepository
         $this->createQueryBuilder('l')
             ->delete('App:Level', 'l')
             ->where('l.id = :levelId')
-            ->setParameter('levelId', $id);
+            ->setParameter('levelId', $id)
+        ;
     }
 
     public function addEntry(float $liter, \DateTimeInterface $dateTime): Level

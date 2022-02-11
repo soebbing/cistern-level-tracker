@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -30,7 +31,8 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $since = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))
-                ->sub(new \DateInterval('P1Y'));
+            ->sub(new \DateInterval('P1Y'))
+        ;
 
         return new Response(
             $this->twig->render(
