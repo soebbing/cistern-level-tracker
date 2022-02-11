@@ -8,7 +8,8 @@ use App\DataFixtures\LevelFixtures;
 use App\Entity\Level;
 use App\Repository\LevelRepository;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,11 +20,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 final class LevelRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
 
     protected function setUp(): void
     {
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
@@ -33,11 +34,11 @@ final class LevelRepositoryTest extends WebTestCase
     public function testValuesAreStored(): void
     {
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
 
         $date = new \DateTimeImmutable('now');
 
-        $repository->addEntry(4, $date);
+        $repository->addEntry(4., $date);
         $results = $repository->getDataSince($date);
 
         self::assertCount(1, $results);
@@ -45,14 +46,14 @@ final class LevelRepositoryTest extends WebTestCase
         /** @var Level $result */
         $result = array_shift($results);
         self::assertInstanceOf(Level::class, $result);
-        self::assertSame(4, $result->getLiter());
+        self::assertSame(4., $result->getLiter());
         self::assertSame($date->getTimestamp(), $result->getDatetime()->getTimestamp());
     }
 
     public function testDataSinceWithoutParameterFilters(): void
     {
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
 
         // Without defining a date, we get the results of last month
         $results = $repository->getDataSince();
@@ -63,7 +64,7 @@ final class LevelRepositoryTest extends WebTestCase
     public function testDataSinceWithDateParameterWorks(): void
     {
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
 
         $lastMonth = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P20Y'));
         $results = $repository->getDataSince($lastMonth);
@@ -75,7 +76,7 @@ final class LevelRepositoryTest extends WebTestCase
         $this->expectException(\InvalidArgumentException::class);
 
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
 
         $repository->addEntry(-4, new \DateTimeImmutable('now'));
     }
@@ -83,7 +84,7 @@ final class LevelRepositoryTest extends WebTestCase
     public function testGetExportResultWorks(): void
     {
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
         $export = $repository->getAllResults();
 
         self::assertContainsOnlyInstancesOf(Level::class, $export);
@@ -92,7 +93,7 @@ final class LevelRepositoryTest extends WebTestCase
     public function testEntity(): void
     {
         /** @var LevelRepository $repository */
-        $repository = $this->getContainer()->get(LevelRepository::class);
+        $repository = self::getContainer()->get(LevelRepository::class);
 
         $export = $repository->getAllResults();
 

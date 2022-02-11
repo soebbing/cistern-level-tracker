@@ -6,7 +6,7 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\LevelFixtures;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -17,13 +17,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 final class ExportControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function testCorrectResponseType(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
@@ -43,7 +42,8 @@ final class ExportControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\DataFixtures\LevelFixtures;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -14,15 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 final class StoreControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function testDateValueIsStored(): void
     {
         $client = self::createClient();
-
-        $this->loadFixtures([
-            LevelFixtures::class,
-        ]);
 
         $client->request('GET', '/add/1.11/2020-02-20%2020:02:20');
 
@@ -40,7 +34,8 @@ final class StoreControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
@@ -56,9 +51,10 @@ final class StoreControllerTest extends WebTestCase
 
     public function testGetNegativeValueThrowsError(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
@@ -70,7 +66,8 @@ final class StoreControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
@@ -82,7 +79,8 @@ final class StoreControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $this->loadFixtures([
+        $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
+        $dbTools->get()->loadFixtures([
             LevelFixtures::class,
         ]);
 
