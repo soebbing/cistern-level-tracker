@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-glibc:alpine-3.15 AS base
+FROM frolvlad/alpine-glibc:alpine-3.16 AS base
 
 ENV PROJECT_ROOT=/app
 ENV COMPOSER_HOME=/var/cache/composer
@@ -8,14 +8,14 @@ ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 RUN apk --update add ca-certificates \
     && apk --no-cache add \
         nginx supervisor curl zip git rsync bash unzip wget openssh-client gnu-libiconv \
-        php8 php8-fpm php8-soap php8-redis php8-tokenizer \
-        php8-ctype php8-curl php8-dom php8-gd \
-        php8-iconv php8-intl php8-json php8-mbstring \
-        php8-mysqli php8-openssl php8-pdo_mysql php8-pdo_sqlite \
-        php8-session php8-xml php8-xmlreader php8-xmlwriter php8-simplexml \
-        php8-zip php8-zlib php8-phar php8-opcache \
+        php81 php81-fpm php81-soap php81-redis php81-tokenizer \
+        php81-ctype php81-curl php81-dom php81-gd \
+        php81-iconv php81-intl php81-json php81-mbstring \
+        php81-mysqli php81-openssl php81-pdo_mysql php81-pdo_sqlite \
+        php81-session php81-xml php81-xmlreader php81-xmlwriter php81-simplexml \
+        php81-zip php81-zlib php81-phar php81-opcache \
         unzip wget \
-    && ln -sf /usr/bin/php8 /usr/bin/php \
+    && ln -sf /usr/bin/php81 /usr/bin/php \
     \
     && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log \
     && rm /etc/nginx/conf.d/default.conf \
@@ -32,8 +32,8 @@ COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 COPY ./composer.json $PROJECT_ROOT/composer.json
 COPY ./composer.lock $PROJECT_ROOT/composer.lock
 
-RUN composer install --no-dev
-RUN composer dump-autoload -o
+RUN composer install --no-dev --no-scripts
+RUN composer dump-autoload --optimize
 
 FROM base AS build-fpm
 
@@ -43,7 +43,7 @@ COPY --from=build-fpm-composer $PROJECT_ROOT $PROJECT_ROOT
 
 FROM build-fpm-composer AS test
 
-RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add php8-pecl-pcov
+RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add php81-pecl-pcov
 
 RUN composer install --dev
 RUN composer test-coverage
