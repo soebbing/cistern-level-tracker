@@ -1,41 +1,44 @@
-FROM alpine:3.15
+FROM frolvlad/alpine-glibc:alpine-3.16 AS base
 
 ENV PROJECT_ROOT=/app
 ENV COMPOSER_HOME=/var/cache/composer
 ENV ARTIFACTS_DIR=/artifacts
 ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
-# Adding a new repository for the more recent PHP 8.0 versions
-ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
-
 RUN apk --update add ca-certificates \
-    && echo "https://dl.bintray.com/php-alpine/v3.15/php-8.0" >> /etc/apk/repositories \
     && apk --no-cache add \
-        nginx supervisor curl zip git rsync bash openssh-client \
-        php8 php8-fpm php8-soap php8-redis \
-        php8-ctype php8-curl php8-dom php8-gd \
-        php8-iconv php8-intl php8-mbstring \
-        php8-mysqli php8-openssl php8-pdo_mysql \
-        php8-session php8-xml php8-xmlreader \
-        php8-zip php8-zlib php8-phar php8-opcache php8-sqlite3 \
-        gnu-libiconv nodejs npm yarn \
-    && ln -sf /usr/bin/php8 /usr/bin/php \
-    && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log $COMPOSER_HOME \
+        nginx supervisor curl zip git rsync bash unzip wget openssh-client gnu-libiconv \
+        php81 php81-fpm php81-soap php81-redis php81-tokenizer \
+        php81-ctype php81-curl php81-dom php81-gd \
+        php81-iconv php81-intl php81-json php81-mbstring \
+        php81-mysqli php81-openssl php81-pdo_mysql php81-pdo_sqlite \
+        php81-session php81-xml php81-xmlreader php81-xmlwriter php81-simplexml \
+        php81-zip php81-zlib php81-phar php81-opcache \
+        unzip wget \
+    && ln -sf /usr/bin/php81 /usr/bin/php \
+    \
+    && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log \
     && rm /etc/nginx/conf.d/default.conf \
-    && adduser -u 1000 -D -h $PROJECT_ROOT app app
+    ; adduser -u 1000 -D -h $PROJECT_ROOT app app
+
+COPY ./config/etc /etc
+
+FROM base AS build-fpm-composer
+
+WORKDIR $PROJECT_ROOT
 
 COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 
-# Copy system configs
-COPY config/etc /etc
+COPY ./composer.json $PROJECT_ROOT/composer.json
+COPY ./composer.lock $PROJECT_ROOT/composer.lock
 
-# Make sure files/folders needed by the processes are accessible when they run under the app
-RUN chown -R app.app /run \
-    && chown -R app.app /var/lib/nginx \
-    && chown -R app.app /var/log/nginx \
-    && chown -R app.app /var/cache/composer
+RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --prefer-dist install
+
+FROM base AS build-fpm
 
 WORKDIR $PROJECT_ROOT
+
+COPY --from=build-fpm-composer $PROJECT_ROOT $PROJECT_ROOT
 
 ADD --chown=app . $PROJECT_ROOT
 
@@ -43,13 +46,23 @@ RUN rm -rf $PROJECT_ROOT/var/cache \
         $PROJECT_ROOT/var/log \
         $PROJECT_ROOT/vendor \
         $PROJECT_ROOT/tests \
+        $PROJECT_ROOT/composer \
     && chown -R app:app $PROJECT_ROOT/var
 
 USER app
 
-RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --prefer-dist install \
-    && composer js-ci \
-    && composer build-js-prod
+FROM build-fpm-composer AS final
+
+# Make sure files/folders needed by the processes are accessible when they run under the app
+RUN chown -R app.app /run \
+    && chown -R app.app /var/lib/nginx \
+    && chown -R app.app /var/log/nginx \
+    && chown -R app.app /var/cache/composer \
+    && mkdir -p $PROJECT_ROOT/var
+
+ADD --chown=app . $PROJECT_ROOT
+
+USER app
 
 # Expose the port nginx is reachable on
 EXPOSE 8000
