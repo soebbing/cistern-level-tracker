@@ -18,7 +18,7 @@ final class DashboardControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin');
 
-        self::assertSame(200, $client->getResponse()->getStatusCode());
-        self::assertSame(1, $crawler->filter('#canvas')->count());
+        static::assertSame(200, $client->getResponse()->getStatusCode());
+        static::assertSame(1, $crawler->filter('#canvas')->count());
     }
 }
