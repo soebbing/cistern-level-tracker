@@ -9,7 +9,6 @@ use App\Entity\Level;
 use App\Repository\LevelRepository;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -20,7 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 final class LevelRepositoryTest extends WebTestCase
 {
-
     protected function setUp(): void
     {
         $dbTools = self::getContainer()->get(DatabaseToolCollection::class);
@@ -41,13 +39,13 @@ final class LevelRepositoryTest extends WebTestCase
         $repository->addEntry(4., $date);
         $results = $repository->getDataSince($date);
 
-        self::assertCount(1, $results);
+        static::assertCount(1, $results);
 
         /** @var Level $result */
         $result = array_shift($results);
-        self::assertInstanceOf(Level::class, $result);
-        self::assertSame(4., $result->getLiter());
-        self::assertSame($date->getTimestamp(), $result->getDatetime()->getTimestamp());
+        static::assertInstanceOf(Level::class, $result);
+        static::assertSame(4., $result->getLiter());
+        static::assertSame($date->getTimestamp(), $result->getDatetime()->getTimestamp());
     }
 
     public function testDataSinceWithoutParameterFilters(): void
@@ -58,7 +56,7 @@ final class LevelRepositoryTest extends WebTestCase
         // Without defining a date, we get the results of last month
         $results = $repository->getDataSince();
 
-        self::assertCount(2, $results);
+        static::assertCount(2, $results);
     }
 
     public function testDataSinceWithDateParameterWorks(): void
@@ -68,7 +66,7 @@ final class LevelRepositoryTest extends WebTestCase
 
         $lastMonth = (new \DateTimeImmutable('now'))->sub(new \DateInterval('P20Y'));
         $results = $repository->getDataSince($lastMonth);
-        self::assertCount(4, $results);
+        static::assertCount(4, $results);
     }
 
     public function testNegativeLitersThrowException(): void
@@ -87,7 +85,7 @@ final class LevelRepositoryTest extends WebTestCase
         $repository = self::getContainer()->get(LevelRepository::class);
         $export = $repository->getAllResults();
 
-        self::assertContainsOnlyInstancesOf(Level::class, $export);
+        static::assertContainsOnlyInstancesOf(Level::class, $export);
     }
 
     public function testEntity(): void
@@ -99,14 +97,14 @@ final class LevelRepositoryTest extends WebTestCase
 
         /** @var Level $entity */
         $entity = array_shift($export);
-        self::assertIsInt($entity->getId());
-        self::assertIsFloat($entity->getLiter());
-        self::assertInstanceOf(\DateTime::class, $entity->getDateTime());
+        static::assertIsInt($entity->getId());
+        static::assertIsFloat($entity->getLiter());
+        static::assertInstanceOf(\DateTime::class, $entity->getDateTime());
 
         $json = $entity->jsonSerialize();
-        self::assertIsArray($json);
-        self::assertArrayNotHasKey('id', $json);
-        self::assertArrayHasKey('liter', $json);
-        self::assertArrayHasKey('datetime', $json);
+        static::assertIsArray($json);
+        static::assertArrayNotHasKey('id', $json);
+        static::assertArrayHasKey('liter', $json);
+        static::assertArrayHasKey('datetime', $json);
     }
 }

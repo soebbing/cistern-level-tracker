@@ -28,11 +28,11 @@ final class ExportControllerTest extends WebTestCase
 
         $client->request('GET', '/export');
 
-        self::assertSame(200, $client->getResponse()->getStatusCode());
-        self::assertSame('UTF-8', $client->getResponse()->getCharset());
-        self::assertSame('text/csv; charset=UTF-8', $client->getResponse()->headers->get('content-type'));
-        self::assertSame('noindex', $client->getResponse()->headers->get('x-robots-tag'));
-        self::assertSame('attachment; filename=cistern-level-data.csv', $client->getResponse()->headers->get('content-disposition'));
+        static::assertSame(200, $client->getResponse()->getStatusCode());
+        static::assertSame('UTF-8', $client->getResponse()->getCharset());
+        static::assertSame('text/csv; charset=UTF-8', $client->getResponse()->headers->get('content-type'));
+        static::assertSame('noindex', $client->getResponse()->headers->get('x-robots-tag'));
+        static::assertSame('attachment; filename=cistern-level-data.csv', $client->getResponse()->headers->get('content-disposition'));
     }
 
     /**
@@ -50,10 +50,10 @@ final class ExportControllerTest extends WebTestCase
         $client->request('GET', '/export', ['delimiter' => $delimiter]);
 
         $rows = str_getcsv(trim($client->getResponse()->getContent()), "\n");
-        self::assertCount(5, $rows);
+        static::assertCount(5, $rows);
 
         array_map(
-            static fn (string $row) => self::assertCount(3, str_getcsv($row, $delimiter)),
+            static fn (string $row) => static::assertCount(3, str_getcsv($row, $delimiter)),
             $rows
         );
     }

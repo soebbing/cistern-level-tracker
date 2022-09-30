@@ -12,7 +12,7 @@
     <server name="APP_ENV" value="test" force="true"/>
     <server name="APP_SECRET" value="$ecretf0rt3st" force="true"/>
     <server name="SHELL_VERBOSITY" value="-1"/>
-    <server name="SYMFONY_DEPRECATIONS_HELPER" value="999999"/>
+    <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
     <server name="KERNEL_CLASS" value="App\Kernel"/>
     <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/cistern-test.sqlite?charset=UTF8"/>
   </php>
