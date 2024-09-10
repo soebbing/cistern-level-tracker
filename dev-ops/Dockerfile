@@ -1,27 +1,27 @@
-FROM frolvlad/alpine-glibc:alpine-3.15 AS base
+FROM alpine:3.19.4 AS base
 
 ENV PROJECT_ROOT=/app
-ENV COMPOSER_HOME=/var/cache/composer
+ENV COMPOSER_HOME=$PROJECT_ROOT/.composer
 ENV ARTIFACTS_DIR=/artifacts
 ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 RUN apk --update add ca-certificates \
     && apk --no-cache add \
-        nginx supervisor curl zip git rsync bash unzip wget openssh-client gnu-libiconv \
-        php8 php8-fpm php8-soap php8-redis php8-tokenizer \
-        php8-ctype php8-curl php8-dom php8-gd \
-        php8-iconv php8-intl php8-json php8-mbstring \
-        php8-mysqli php8-openssl php8-pdo_mysql php8-pdo_sqlite \
-        php8-session php8-xml php8-xmlreader php8-xmlwriter php8-simplexml \
-        php8-zip php8-zlib php8-phar php8-opcache \
-        unzip wget \
-    && ln -sf /usr/bin/php8 /usr/bin/php \
-    \
-    && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log \
-    && rm /etc/nginx/conf.d/default.conf \
-    ; adduser -u 1000 -D -h $PROJECT_ROOT app app
+        nginx supervisor curl zip git bash openssh-client gnu-libiconv \
+        php83 php83-fpm php83-ctype php83-curl php83-dom php83-fileinfo php83-gd \
+        php83-iconv php83-intl php83-mbstring php83-openssl php83-pdo_mysql \
+        php83-pdo_sqlite php83-session php83-tokenizer php83-xml php83-simplexml \
+        php83-xmlwriter php83-zip php83-phar php83-opcache \
+        \
+    && ln -sf /usr/bin/php83 /usr/bin/php \
+    && mkdir -p $PROJECT_ROOT/var/cache $PROJECT_ROOT/var/log $COMPOSER_HOME \
+    && rm -f /etc/nginx/conf.d/default.conf \
+        /var/cache/apk/* \
+    && mkdir -p $COMPOSER_HOME \
+    && adduser -u 1000 -D -h $PROJECT_ROOT app app
 
-COPY ./config/etc /etc
+# Copy system configs
+COPY config/etc /etc
 
 FROM base AS build-fpm-composer
 
@@ -32,8 +32,7 @@ COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 COPY ./composer.json $PROJECT_ROOT/composer.json
 COPY ./composer.lock $PROJECT_ROOT/composer.lock
 
-RUN composer install --no-dev
-RUN composer dump-autoload -o
+RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --prefer-dist install
 
 FROM base AS build-fpm
 
@@ -45,7 +44,7 @@ FROM build-fpm-composer AS test
 
 RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add php8-pecl-pcov
 
-RUN composer install --dev
+RUN composer --optimize-autoloader --no-scripts --no-interaction --no-dev --prefer-dist install
 RUN composer test-coverage
 
 ADD --chown=app . $PROJECT_ROOT
@@ -75,7 +74,6 @@ COPY ./public $PROJECT_ROOT/public
 RUN chown -R app.app /run \
     && chown -R app.app /var/lib/nginx \
     && chown -R app.app /var/log/nginx \
-    && chown -R app.app /var/cache/composer \
     && mkdir -p $PROJECT_ROOT/var
 
 ADD --chown=app . $PROJECT_ROOT
